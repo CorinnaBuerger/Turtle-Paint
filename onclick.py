@@ -3,7 +3,7 @@ from turtle import Screen, Turtle
 
 from libturtle import StringToggler, VolumeBar
 
-START_VOLUME_BAR = (-370, 250)
+START_VOLUME_BAR = (80, 280)
 START_PENUP = (0, 300)
 START_PENDOWN = (0, 280)
 MAX_PENSIZE = 21
@@ -26,11 +26,9 @@ def pen_change(xdummy, ydummy):
     global toggler
 
     if t1.isdown():
-        # TODO(coco): update current drawing state text box
         t1.penup()
         toggler.toggle()
     else:
-        # TODO(coco): update current drawing state text box
         t1.pendown()
         toggler.toggle()
 
@@ -39,43 +37,62 @@ def draw_color():
     s.tracer(False)
     x = -370
     pos = (x, 310)
+    t2.penup()
     t3.penup()
+    t2.goto(pos)
     t3.goto(pos)
+    t2.right(90)
     t3.right(90)
+    t2.pendown()
     t3.pendown()
-    t3.pensize(2)
+    t2.pensize(1)
+    t3.pensize(5)
+    for _ in range(4):
+        t3.fd(30)
+        t3.left(90)
     for color in colors:
         # determine colors
         if color == "white":
-            t3.pencolor("black")
-            t3.fillcolor("white")
+            t2.pencolor("black")
+            t2.fillcolor("white")
         else:
-            t3.color(color)
+            t2.color(color)
 
         # draw square
-        t3.begin_fill()
+        t2.begin_fill()
         for _ in range(4):
-            t3.fd(30)
-            t3.left(90)
+            t2.fd(30)
+            t2.left(90)
 
         # pen up, go to next square, pen down
-        t3.end_fill()
-        t3.penup()
+        t2.end_fill()
+        t2.penup()
         x += 40
-        t3.goto(x, 310)
-        t3.pendown()
+        t2.goto(x, 310)
+        t2.pendown()
     s.tracer(True)
 
 
+
 def return_pos_click():
-    s.onscreenclick(t3.goto)
-    return t3.pos()
+    s.onscreenclick(t2.goto)
+    return t2.pos()
 
 
 def change_color():
     color = colors.pop(0)
     t1.pencolor(color)
     colors.append(color)
+    t3.pensize(3)
+    s.tracer(False)
+    if color == "black":
+        t3.pencolor("dim gray")
+    else:
+        t3.pencolor("black")
+    t3.penup()
+    t3.goto
+
+    s.tracer(True)
 
 
 def set_color():
@@ -103,7 +120,6 @@ def set_pensize():
 
 
 def setup():
-    t2.penup()
     t2.hideturtle()
     t3.hideturtle()
     t1.shape("turtle")
@@ -114,8 +130,8 @@ def setup():
 
 if __name__ == "__main__":
     t1 = Turtle()  # main turtle
-    t2 = Turtle()  # runs hidden so that the program doesn't crash
-    t3 = Turtle()  # draws color bar
+    t2 = Turtle()  # draws color bar
+    t3 = Turtle()  # selects current color
     s = Screen()
     v = VolumeBar(START_VOLUME_BAR, MAX_PENSIZE, s)
     toggler = StringToggler(START_PENUP, START_PENDOWN,
