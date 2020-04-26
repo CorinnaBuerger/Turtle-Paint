@@ -1,5 +1,6 @@
 import os
 import subprocess
+import platform
 from sys import exit
 from turtle import Screen, Turtle, mainloop
 
@@ -68,10 +69,16 @@ class TurtlePaint():
         name = self.s.textinput("Save a Screenshot to PDF",
                                 "Please enter a filename (without .pdf): ")
         self.s.getcanvas().postscript(file="tmp.ps", colormode="color")
-        p = subprocess.Popen(["ps2pdf tmp.ps {}.pdf".format(name)],
-                             shell=True)
-        p.wait()
-        os.remove("tmp.ps")
+        if platform.system() == "Windows":
+            cmd = r'c:\Program Files\Git\usr\bin\bash.exe'
+            p = subprocess.Popen([cmd, "ps2pdf", "tmp.ps", "{}.pdf".format(name)],
+                                shell=True)
+        else:  # we're actually on a good OS here
+            p = subprocess.Popen(["ps2pdf tmp.ps {}.pdf".format(name)],
+                                shell=True)
+        ret = p.wait()
+        if ret == 0:
+            os.remove("tmp.ps")
         self.s.listen()
 
     def pen_change(self, xdummy, ydummy):

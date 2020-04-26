@@ -1,0 +1,4 @@
+#!/bin/sh
+# Emulate ps2pdf on Wind***.
+# our input file c/Users/Corinna/Documents/turtle_paint/tmp.ps
+'/c/Program Files/gs/gs9.52/bin/gswin64c.exe' -sDEVICE=pdfwrite -o $2 $1
