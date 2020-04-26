@@ -4,7 +4,7 @@ from turtle import Screen, Turtle, mainloop
 from libturtle import StringToggler, VolumeBar
 
 settings = {
-    "start_volume_bar": (-370, 250),
+    "start_volume_bar": (80, 280),
     "start_penup": (0, 300),
     "start_pendown": (0, 280),
     "max_pensize": 21,
@@ -34,6 +34,7 @@ class TurtlePaint():
         self.t1.shape("turtle")
         self.t1.resizemode("auto")  # turtlesize increases with pensize
         self.t2.hideturtle()
+        self.t3.hideturtle()
         self.s.screensize(600, 600)
         self.s.title(self.settings.get("title"))
         self.draw_color()
@@ -65,6 +66,13 @@ class TurtlePaint():
             self.t1.pendown()
             self.toggler.toggle()
 
+    def draw_selector(self):
+        self.t3.clear()
+        self.t3.pensize(4)
+        for _ in range(4):
+            self.t3.fd(30)
+            self.t3.left(90)
+
     def draw_color(self):
         self.s.tracer(False)
         x = -370
@@ -72,16 +80,12 @@ class TurtlePaint():
         self.t2.penup()
         self.t3.penup()
         self.t2.goto(pos)
-        self.t3.goto(pos)
+        self.t3.goto(-50, 310)
         self.t2.right(90)
         self.t3.right(90)
         self.t2.pendown()
         self.t3.pendown()
         self.t2.pensize(1)
-        self.t3.pensize(5)
-        for _ in range(4):
-            self.t3.fd(30)
-            self.t3.left(90)
         for color in self.colors:
             # determine colors
             if color == "white":
@@ -109,19 +113,23 @@ class TurtlePaint():
         return self.t2.pos()
 
     def change_color(self):
+        if self.t3.pos()[0] >= -50:
+            x = -370
+        else:
+            x = self.t3.pos()[0] + 40
         color = self.colors.pop(0)
         self.t1.pencolor(color)
         self.colors.append(color)
-        self.t3.pensize(3)
         self.s.tracer(False)
         if color == "black":
             self.t3.pencolor("dim gray")
         else:
             self.t3.pencolor("black")
         self.t3.penup()
-        self.t3.goto
-
-        s.tracer(True)
+        self.t3.goto(x, 310)
+        self.t3.pendown()
+        self.draw_selector()
+        self.s.tracer(True)
 
     def set_color(self):
         self.s.onkey(self.change_color, "space")
