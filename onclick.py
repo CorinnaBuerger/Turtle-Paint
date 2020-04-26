@@ -79,13 +79,13 @@ def increase_pensize():
     pensize = t1.pensize() + PENSIZE_STEPSIZE
     if pensize <= MAX_PENSIZE:
         t1.pensize(pensize)
-        v.fill_volume_bar(t1.pensize/MAX_PENSIZE)
+        v.fill_volume_bar(t1.pensize()/MAX_PENSIZE)
 
 def decrease_pensize():
     pensize = t1.pensize() - PENSIZE_STEPSIZE
     if pensize >= 1:
         t1.pensize(pensize)
-        v.fill_volume_bar(t1.pensize/MAX_PENSIZE)
+        v.fill_volume_bar(t1.pensize()/MAX_PENSIZE)
 
 def set_pensize():
     s.onkey(increase_pensize, "Up")
