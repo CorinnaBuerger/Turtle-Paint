@@ -1,5 +1,6 @@
 from turtle import Screen, Turtle
 
+
 class VolumeBar():
     def __init__(self, pos, maximum, screen):
         self.bar = Turtle()
@@ -7,7 +8,7 @@ class VolumeBar():
         self.bar_hypo = 100
         self.pencolor = "black"
         self.pensize = 1
-        self.pos = pos 
+        self.pos = pos
         self.maximum = maximum
         self.s = screen
 
@@ -31,8 +32,8 @@ class VolumeBar():
         self.fill.hideturtle()
         self.fill.clear()
         self.s.tracer(False)
-        forward = self.bar_hypo * percent 
-        down = self.maximum * percent 
+        forward = self.bar_hypo * percent
+        down = self.maximum * percent
         self.fill.pencolor(self.pencolor)
         self.fill.fillcolor(self.pencolor)
         self.fill.penup()
@@ -48,6 +49,7 @@ class VolumeBar():
         self.fill.right(180)
         self.fill.end_fill()
         self.s.tracer(True)
+
 
 class StringToggler():
     def __init__(self, pos_first, pos_second, str_1, str_2, screen):
@@ -70,12 +72,12 @@ class StringToggler():
         self.write_turtle.pendown()
 
         self.write_turtle.color(self.active_color)
-        self.write_turtle.write(self.active_str[0], font = self.font)
+        self.write_turtle.write(self.active_str[0], font=self.font)
         self.write_turtle.penup()
         self.write_turtle.goto(self.passive_str[1])
         self.write_turtle.pendown()
         self.write_turtle.color(self.non_active_color)
-        self.write_turtle.write(self.passive_str[0], font = self.font)
+        self.write_turtle.write(self.passive_str[0], font=self.font)
         self.s.tracer(True)
 
     def toggle(self):
