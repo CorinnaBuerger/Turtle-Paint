@@ -1,3 +1,5 @@
+import os
+import subprocess
 from sys import exit
 from turtle import Screen, Turtle, mainloop
 
@@ -9,7 +11,8 @@ settings = {
     "start_pendown": (0, 280),
     "max_pensize": 21,
     "pensize_stepsize": 2,
-    "title": "Turtle Paint v0.0.2"
+    "title": "Turtle Paint v0.0.2",
+    "screen_dims": (800, 600),
 }
 
 
@@ -34,7 +37,10 @@ class TurtlePaint():
         self.t1.shape("turtle")
         self.t1.resizemode("auto")  # turtlesize increases with pensize
         self.t2.hideturtle()
-        self.s.screensize(600, 600)
+        self.s.screensize(settings.get("screen_dims")[0],
+                          settings.get("screen_dims")[1])  # space for turtle
+        self.s.setup(settings.get("screen_dims")[0]*1.1,
+                     settings.get("screen_dims")[1]*1.1)  # actual screen size
         self.s.title(self.settings.get("title"))
         self.draw_color()
         self.v.draw_volume_bar()
@@ -50,10 +56,22 @@ class TurtlePaint():
         self.t1.onclick(self.pen_change, 3)
         self.s.onscreenclick(self.t1.goto, 1)
         self.s.onkey(self.screen_exit_handler, "Escape")
+        self.s.onkey(self.screen_save_handler, "s")
 
     def screen_exit_handler(self):
         print("[debug] got ESC, quitting")
         exit(0)
+
+    def screen_save_handler(self):
+        print("[debug] trying to save canvas to a pdf file")
+        name = self.s.textinput("Save a Screenshot to PDF",
+                                "Please enter a filename (without .pdf): ")
+        self.s.getcanvas().postscript(file="tmp.ps", colormode="color")
+        p = subprocess.Popen(["ps2pdf tmp.ps {}.pdf".format(name)],
+                             shell=True)
+        p.wait()
+        os.remove("tmp.ps")
+        self.s.listen()
 
     def pen_change(self, xdummy, ydummy):
         self.toggler
@@ -121,7 +139,7 @@ class TurtlePaint():
         self.t3.penup()
         self.t3.goto
 
-        s.tracer(True)
+        self.s.tracer(True)
 
     def set_color(self):
         self.s.onkey(self.change_color, "space")
