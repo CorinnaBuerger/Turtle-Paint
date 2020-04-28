@@ -31,22 +31,22 @@ class TurtlePaint():
         self.t8 = Turtle() # selects current fillcolor
         self.s = Screen()
         self.instructions = '''
-                               b              begin filling
-                               c              clear all
-                               e              end filling
-                               f              change fillcolor
-                               h              turn left
-                               j              go forward
-                               k              go backward
-                               l              turn right
-                               p              pen up / pen down
-                               s              save picture
-                               t              change turtle shape
-                               u              undo last drawing
-                               space          change color
-                               arrow_up       increase pensize
-                               arrow_down     decrease pensize
-                            '''
+                               b                            begin filling
+                               c                            clear all
+                               e                            end filling
+                               f                             change fillcolor
+                               h                            turn left
+                               j                             go forward
+                               k                            go backward
+                               l                             turn right
+                               p                            pen up / pen down
+                               s                            save picture
+                               t                             change turtle shape
+                               u                            undo last drawing
+                               space                    change color
+                               arrow_up              increase pensize
+                               arrow_down         decrease pensize
+                               '''
         self.v = VolumeBar(settings.get("start_volume_bar"),
                            settings.get("max_pensize"), self.s)
         self.toggler = StringToggler(settings.get("start_penup"),
