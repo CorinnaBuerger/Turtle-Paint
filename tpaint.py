@@ -1,11 +1,13 @@
 import os
 import subprocess
-from tkinter import Tk, Canvas
+import tkinter as tk
 import platform
 from sys import exit
 from turtle import RawTurtle, Screen, Turtle, mainloop
 
 from libturtle import StringToggler, VolumeBar
+
+
 
 settings = {
     "start_volume_bar": (80, 280),
@@ -26,9 +28,13 @@ class TurtlePaint():
         self.t5 = Turtle() # makes shape stamps
         self.t6 = Turtle() # selects current shape
         self.t7 = Turtle() # refers to instructions
+        self.t8 = Turtle() # selects current fillcolor
         self.s = Screen()
         self.instructions = '''
+                               b              begin filling
                                c              clear all
+                               e              end filling
+                               f              change fillcolor
                                h              turn left
                                j              go forward
                                k              go backward
@@ -48,6 +54,8 @@ class TurtlePaint():
                                      "pen down", "pen up", self.s)
         self.colors = ["green", "red", "yellow", "pink", "blue", "lightblue",
                        "orange", "purple", "black", "white"]
+        self.fillcolors = ["green", "red", "yellow", "pink", "blue", "lightblue",
+                       "orange", "purple", "black", "white"]
         self.shapes = ["turtle", "triangle", "circle", "square", "arrow", "classic"]
         self.settings = settings
 
@@ -62,10 +70,12 @@ class TurtlePaint():
         self.t5.hideturtle()
         self.t6.hideturtle()
         self.t7.hideturtle()
+        self.t8.hideturtle()
         self.s.screensize(settings.get("screen_dims")[0],
                           settings.get("screen_dims")[1])  # space for turtle
         self.s.setup(settings.get("screen_dims")[0]*1.1,
                      settings.get("screen_dims")[1]*1.1)  # actual screen size
+        self.s.cv._rootwindow.resizable(False, False)
         self.s.title(self.settings.get("title"))
         self.draw_color()
         self.v.draw_volume_bar()
@@ -92,6 +102,9 @@ class TurtlePaint():
         self.s.onkeypress(self.move_up, "k")
         self.s.onkeypress(self.turn_left, "h")
         self.s.onkeypress(self.turn_right, "l")
+        self.s.onkey(self.t1.begin_fill, "b")
+        self.s.onkey(self.t1.end_fill, "e")
+        self.s.onkey(self.change_fillcolor, "f")
         self.s.listen()
      
 
@@ -119,6 +132,7 @@ class TurtlePaint():
     def show_instrucions(self):
         tk.messagebox.askokcancel(title = "Instructions", message = self.instructions)
 
+
     def pen_change(self):
         self.toggler
 
@@ -142,12 +156,15 @@ class TurtlePaint():
         pos = (x, 310)
         self.t2.penup()
         self.t3.penup()
+        self.t8.penup()
         self.t2.goto(pos)
         self.t3.goto(-50, 310)
+        self.t8.goto(-35, 295)
         self.t2.right(90)
         self.t3.right(90)
         self.t2.pendown()
         self.t3.pendown()
+        self.t8.pendown()
         self.t2.pensize(1)
         for color in self.colors:
             # determine colors
@@ -192,6 +209,30 @@ class TurtlePaint():
         self.t3.pendown()
         self.draw_selector(self.t3, 4)
         self.s.tracer(True)
+
+    def change_fillcolor(self):
+        self.s.tracer(False)
+        if self.t8.pos()[0] >= -36:
+            x = -395
+        else:
+            x = self.t8.pos()[0] + 40
+
+        fillcolor = self.fillcolors.pop(0)
+        self.t1.fillcolor(fillcolor)
+        self.fillcolors.append(fillcolor)
+
+        if fillcolor == "black":
+            self.t8.pencolor("dim gray")
+        else:
+            self.t8.pencolor("black")
+
+        self.t8.penup()
+        self.t8.goto(x, 295)
+        self.t8.pendown()
+        self.t8.clear()
+        self.t8.dot(10)
+        self.s.tracer(True)
+
 
     def increase_pensize(self):
         pensize = self.t1.pensize() + self.settings.get("pensize_stepsize")
