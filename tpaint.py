@@ -22,6 +22,7 @@ class TurtlePaint():
         self.t1 = Turtle()  # main turtle
         self.t2 = Turtle()  # draws color bar
         self.t3 = Turtle()  # selects a color from the color bar
+        self.t4 = Turtle()  # draws tool bar border
         self.s = Screen()
         self.v = VolumeBar(settings.get("start_volume_bar"),
                            settings.get("max_pensize"), self.s)
@@ -36,9 +37,11 @@ class TurtlePaint():
 
     def setup(self):
         self.t1.shape("turtle")
+        self.t1.speed(0)
         self.t1.resizemode("auto")  # turtlesize increases with pensize
         self.t2.hideturtle()
         self.t3.hideturtle()
+        self.t4.hideturtle()
         self.s.screensize(settings.get("screen_dims")[0],
                           settings.get("screen_dims")[1])  # space for turtle
         self.s.setup(settings.get("screen_dims")[0]*1.1,
@@ -46,19 +49,26 @@ class TurtlePaint():
         self.s.title(self.settings.get("title"))
         self.draw_color()
         self.v.draw_volume_bar()
-        self.v.fill_volume_bar(
-            self.t1.pensize()/self.settings.get("max_pensize"))
-        self.return_pos_click()
+        self.draw_toolbar()
+        self.v.fill_volume_bar(self.t1.pensize()/self.settings.get("max_pensize"))
         self.set_color()
         self.set_pensize()
         self.register_callbacks()
 
     def register_callbacks(self):
         self.t1.onclick(self.t1.goto, 1)
-        self.t1.onclick(self.pen_change, 3)
-        self.s.onscreenclick(self.t1.goto, 1)
+        self.s.onkey(self.pen_change, "p")
+        self.s.onscreenclick(self.go_to, 1)
+        self.t1.ondrag(self.go_to, 1)
         self.s.onkey(self.screen_exit_handler, "Escape")
         self.s.onkey(self.screen_save_handler, "s")
+        self.s.onkeypress(self.undo_drawings, "u")
+        self.s.onkey(self.clear_all, "c")
+        self.s.onkeypress(self.move_down, "j")
+        self.s.onkeypress(self.move_up, "k")
+        self.s.onkeypress(self.turn_left, "h")
+        self.s.onkeypress(self.turn_right, "l")
+     
 
     def screen_exit_handler(self):
         print("[debug] got ESC, quitting")
@@ -81,7 +91,7 @@ class TurtlePaint():
             os.remove("tmp.ps")
         self.s.listen()
 
-    def pen_change(self, xdummy, ydummy):
+    def pen_change(self):
         self.toggler
 
         if self.t1.isdown():
@@ -133,10 +143,6 @@ class TurtlePaint():
             self.t2.pendown()
         self.s.tracer(True)
 
-    def return_pos_click(self):
-        self.s.onscreenclick(self.t2.goto)
-        return self.t2.pos()
-
     def change_color(self):
         if self.t3.pos()[0] >= -50:
             x = -370
@@ -181,6 +187,47 @@ class TurtlePaint():
         self.s.onkey(self.increase_pensize, "Up")
         self.s.onkey(self.decrease_pensize, "Down")
 
+    def draw_toolbar(self):
+        self.s.tracer(False)
+        self.t4.penup()
+        self.t4.goto(-420, 260)
+        self.t4.pensize(3)
+        self.t4.pendown()
+        self.t4.fd(840)
+        self.s.tracer(True)
+
+    def move_up(self):
+        self.t1.fd(10)
+
+    def move_down(self):
+        self.t1.backward(10)
+
+    def turn_left(self):
+        heading = self.t1.heading()
+        if heading == 355:
+            self.t1.setheading(0)
+        else:
+            heading += 5
+            self.t1.setheading(heading)
+
+    def turn_right(self):
+        heading = self.t1.heading()
+        if heading == 0:
+            self.t1.setheading(355)
+        else:
+            heading -= 5
+            self.t1.setheading(heading)
+
+    def go_to(self, x, y):
+        if y < 258:
+            self.t1.goto(x, y)
+
+    def undo_drawings(self):
+        self.t1.undo()
+
+    def clear_all(self):
+        self.t1.clear()
+    
     def mainloop(self):
         mainloop()
 
