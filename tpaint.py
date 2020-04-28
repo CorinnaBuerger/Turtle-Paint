@@ -21,8 +21,10 @@ class TurtlePaint():
     def __init__(self, settings):
         self.t1 = Turtle()  # main turtle
         self.t2 = Turtle()  # draws color bar
-        self.t3 = Turtle()  # selects a color from the color bar
+        self.t3 = Turtle()  # selects current color
         self.t4 = Turtle()  # draws tool bar border
+        self.t5 = Turtle()  # makes shape stamps
+        self.t6 = Turtle()  # selects current shape
         self.s = Screen()
         self.v = VolumeBar(settings.get("start_volume_bar"),
                            settings.get("max_pensize"), self.s)
@@ -31,17 +33,19 @@ class TurtlePaint():
                                      "pen down", "pen up", self.s)
         self.colors = ["green", "yellow", "pink", "blue", "lightblue",
                        "orange", "purple", "black", "white"]
+        self.shapes = ["turtle", "triangle", "circle", "square", "arrow", "classic"]
         self.settings = settings
 
         self.setup()
 
     def setup(self):
-        self.t1.shape("turtle")
         self.t1.speed(0)
         self.t1.resizemode("auto")  # turtlesize increases with pensize
         self.t2.hideturtle()
         self.t3.hideturtle()
         self.t4.hideturtle()
+        self.t5.hideturtle()
+        self.t6.hideturtle()
         self.s.screensize(settings.get("screen_dims")[0],
                           settings.get("screen_dims")[1])  # space for turtle
         self.s.setup(settings.get("screen_dims")[0]*1.1,
@@ -50,24 +54,27 @@ class TurtlePaint():
         self.draw_color()
         self.v.draw_volume_bar()
         self.draw_toolbar()
+        self.draw_shapes()
         self.v.fill_volume_bar(self.t1.pensize()/self.settings.get("max_pensize"))
-        self.set_color()
         self.set_pensize()
         self.register_callbacks()
 
     def register_callbacks(self):
         self.t1.onclick(self.t1.goto, 1)
         self.s.onkey(self.pen_change, "p")
+        self.s.onkey(self.change_color, "space")
         self.s.onscreenclick(self.go_to, 1)
         self.t1.ondrag(self.go_to, 1)
         self.s.onkey(self.screen_exit_handler, "Escape")
         self.s.onkey(self.screen_save_handler, "s")
         self.s.onkeypress(self.undo_drawings, "u")
         self.s.onkey(self.clear_all, "c")
+        self.s.onkey(self.change_shape, "t")
         self.s.onkeypress(self.move_down, "j")
         self.s.onkeypress(self.move_up, "k")
         self.s.onkeypress(self.turn_left, "h")
         self.s.onkeypress(self.turn_right, "l")
+        self.s.listen()
      
 
     def screen_exit_handler(self):
@@ -101,12 +108,12 @@ class TurtlePaint():
             self.t1.pendown()
             self.toggler.toggle()
 
-    def draw_selector(self):
-        self.t3.clear()
-        self.t3.pensize(4)
+    def draw_selector(self, turtle, pensize):
+        turtle.clear()
+        turtle.pensize(pensize)
         for _ in range(4):
-            self.t3.fd(30)
-            self.t3.left(90)
+            turtle.fd(30)
+            turtle.left(90)
 
     def draw_color(self):
         self.s.tracer(False)
@@ -162,12 +169,8 @@ class TurtlePaint():
         self.t3.penup()
         self.t3.goto(x, 310)
         self.t3.pendown()
-        self.draw_selector()
+        self.draw_selector(self.t3, 4)
         self.s.tracer(True)
-
-    def set_color(self):
-        self.s.onkey(self.change_color, "space")
-        self.s.listen()
 
     def increase_pensize(self):
         pensize = self.t1.pensize() + self.settings.get("pensize_stepsize")
@@ -194,6 +197,52 @@ class TurtlePaint():
         self.t4.pensize(3)
         self.t4.pendown()
         self.t4.fd(840)
+        self.s.tracer(True)
+
+    def draw_shapes(self):
+        self.s.tracer(False)
+        self.t5.penup()
+        self.t5.resizemode("user")
+        self.t5.shapesize(0.9, 0.9)
+        x = 200
+        self.t5.fillcolor("white")
+        
+        for shape in self.shapes:
+            self.t5.shape("turtle")
+            self.t5.goto(x, 295)
+            self.t5.shape(shape)
+            self.t5.stamp()
+            x += 40
+
+        self.t6.penup()
+        self.t6.goto(389, 280)
+
+        self.s.tracer(True)
+
+    def change_shape(self):
+        self.s.tracer(False)
+        shape = self.shapes.pop(0)
+        self.t1.shape(shape)
+        self.shapes.append(shape)
+
+        if self.t6.pos()[0] >= 380:
+            x = 189
+        elif shape == "circle":
+            x = self.t6.pos()[0] + 38
+        elif shape == "arrow":
+            x = self.t6.pos()[0] + 43
+        elif shape == "classic":
+            x = self.t6.pos()[0] + 32
+        elif shape == "triangle":
+            x = self.t6.pos()[0] + 39
+        else:
+            x = self.t6.pos()[0] + 40
+
+        self.t6.penup()
+        self.t6.goto(x, 280)
+        self.t6.pendown()
+        self.t6.pencolor("green")
+        self.draw_selector(self.t6, 2)
         self.s.tracer(True)
 
     def move_up(self):
