@@ -1,6 +1,6 @@
 import os
 import subprocess
-import tkinter as tk
+from tkinter import Label, messagebox, Entry, Tk
 import platform
 from sys import exit
 from turtle import RawTurtle, Screen, Turtle, mainloop
@@ -30,23 +30,23 @@ class TurtlePaint():
         self.t7 = Turtle() # refers to instructions
         self.t8 = Turtle() # selects current fillcolor
         self.s = Screen()
-        self.instructions = '''
-                               b                            begin filling
-                               c                            clear all
-                               e                            end filling
-                               f                             change fillcolor
-                               h                            turn left
-                               j                             go forward
-                               k                            go backward
-                               l                             turn right
-                               p                            pen up / pen down
-                               s                            save picture
-                               t                             change turtle shape
-                               u                            undo last drawing
-                               space                    change color
-                               arrow_up              increase pensize
-                               arrow_down         decrease pensize
-                               '''
+        self.instructions = {
+                               "b": "begin filling",
+                               "c": "clear all",
+                               "e": "end filling",
+                               "f": "change fillcolor",
+                               "h": "turn left",
+                               "j": "go backward",
+                               "k": "go forward",
+                               "l": "turn right",
+                               "p": "pen up / pen down",
+                               "s": "save picture",
+                               "t": "change turtle shape",
+                               "u": "undo last drawing",
+                               "space": "change color",
+                               "arrow_up": "increase pensize",
+                               "arrow_down": "decrease pensize"
+        }
         self.v = VolumeBar(settings.get("start_volume_bar"),
                            settings.get("max_pensize"), self.s)
         self.toggler = StringToggler(settings.get("start_penup"),
@@ -98,7 +98,7 @@ class TurtlePaint():
         self.s.onkey(self.clear_all, "c")
         self.s.onkey(self.change_shape, "t")
         self.s.onkeypress(self.move_down, "j")
-        self.s.onkey(self.show_instrucions, "h")
+        self.s.onkey(self.show_instrucions, "i")
         self.s.onkeypress(self.move_up, "k")
         self.s.onkeypress(self.turn_left, "h")
         self.s.onkeypress(self.turn_right, "l")
@@ -130,8 +130,16 @@ class TurtlePaint():
         self.s.listen()  # required to re-focus onto turtle
 
     def show_instrucions(self):
-        tk.messagebox.askokcancel(title = "Instructions", message = self.instructions)
+        win = Tk()
 
+        row = 0
+        column = 0
+        for instruction in self.instructions:
+            Label(win, text = instruction).grid(row = row, column = column, sticky = "W", ipadx = 10)
+            column +=1
+            Label(win, text = self.instructions.get(instruction)).grid(row = row, column = column, sticky = "W", ipadx = 10)
+            row += 1
+            column = 0
 
     def pen_change(self):
         self.toggler
@@ -316,7 +324,7 @@ class TurtlePaint():
         self.t7.penup()
         self.t7.goto(-410, -315)
         self.t7.pendown()
-        self.t7.write("press 'h' for instructions")
+        self.t7.write("press 'i' for instructions")
         self.s.tracer(True)
 
 
