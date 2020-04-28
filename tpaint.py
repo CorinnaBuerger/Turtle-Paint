@@ -43,7 +43,7 @@ class TurtlePaint():
                                "s": "save picture",
                                "t": "change turtle shape",
                                "u": "undo last drawing",
-                               "space": "change color",
+                               "space": "change pencolor",
                                "arrow_up": "increase pensize",
                                "arrow_down": "decrease pensize"
         }
@@ -98,7 +98,7 @@ class TurtlePaint():
         self.s.onkey(self.clear_all, "c")
         self.s.onkey(self.change_shape, "t")
         self.s.onkeypress(self.move_down, "j")
-        self.s.onkey(self.show_instrucions, "i")
+        self.s.onkey(self.show_instrucions, "?")
         self.s.onkeypress(self.move_up, "k")
         self.s.onkeypress(self.turn_left, "h")
         self.s.onkeypress(self.turn_right, "l")
@@ -322,9 +322,9 @@ class TurtlePaint():
     def refer_to_instructions(self):
         self.s.tracer(False)
         self.t7.penup()
-        self.t7.goto(-410, -315)
+        self.t7.goto(-410, -320)
         self.t7.pendown()
-        self.t7.write("press 'i' for instructions")
+        self.t7.write("press '?' for instructions")
         self.s.tracer(True)
 
 
