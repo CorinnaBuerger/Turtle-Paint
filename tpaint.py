@@ -1,8 +1,9 @@
 import os
 import subprocess
+from tkinter import Tk, Canvas
 import platform
 from sys import exit
-from turtle import Screen, Turtle, mainloop
+from turtle import RawTurtle, Screen, Turtle, mainloop
 
 from libturtle import StringToggler, VolumeBar
 
@@ -16,22 +17,36 @@ settings = {
     "screen_dims": (800, 600),
 }
 
-
 class TurtlePaint():
     def __init__(self, settings):
-        self.t1 = Turtle()  # main turtle
-        self.t2 = Turtle()  # draws color bar
-        self.t3 = Turtle()  # selects current color
-        self.t4 = Turtle()  # draws tool bar border
-        self.t5 = Turtle()  # makes shape stamps
-        self.t6 = Turtle()  # selects current shape
+        self.t1 = Turtle() # main turtle
+        self.t2 = Turtle() # draws color bar
+        self.t3 = Turtle() # selects current color
+        self.t4 = Turtle() # draws tool bar border
+        self.t5 = Turtle() # makes shape stamps
+        self.t6 = Turtle() # selects current shape
+        self.t7 = Turtle() # refers to instructions
         self.s = Screen()
+        self.instructions = '''
+                               c              clear all
+                               h              turn left
+                               j              go forward
+                               k              go backward
+                               l              turn right
+                               p              pen up / pen down
+                               s              save picture
+                               t              change turtle shape
+                               u              undo last drawing
+                               space          change color
+                               arrow_up       increase pensize
+                               arrow_down     decrease pensize
+                            '''
         self.v = VolumeBar(settings.get("start_volume_bar"),
                            settings.get("max_pensize"), self.s)
         self.toggler = StringToggler(settings.get("start_penup"),
                                      settings.get("start_pendown"),
                                      "pen down", "pen up", self.s)
-        self.colors = ["green", "yellow", "pink", "blue", "lightblue",
+        self.colors = ["green", "red", "yellow", "pink", "blue", "lightblue",
                        "orange", "purple", "black", "white"]
         self.shapes = ["turtle", "triangle", "circle", "square", "arrow", "classic"]
         self.settings = settings
@@ -46,6 +61,7 @@ class TurtlePaint():
         self.t4.hideturtle()
         self.t5.hideturtle()
         self.t6.hideturtle()
+        self.t7.hideturtle()
         self.s.screensize(settings.get("screen_dims")[0],
                           settings.get("screen_dims")[1])  # space for turtle
         self.s.setup(settings.get("screen_dims")[0]*1.1,
@@ -55,6 +71,7 @@ class TurtlePaint():
         self.v.draw_volume_bar()
         self.draw_toolbar()
         self.draw_shapes()
+        self.refer_to_instructions()
         self.v.fill_volume_bar(self.t1.pensize()/self.settings.get("max_pensize"))
         self.set_pensize()
         self.register_callbacks()
@@ -71,6 +88,7 @@ class TurtlePaint():
         self.s.onkey(self.clear_all, "c")
         self.s.onkey(self.change_shape, "t")
         self.s.onkeypress(self.move_down, "j")
+        self.s.onkey(self.show_instrucions, "h")
         self.s.onkeypress(self.move_up, "k")
         self.s.onkeypress(self.turn_left, "h")
         self.s.onkeypress(self.turn_right, "l")
@@ -96,7 +114,10 @@ class TurtlePaint():
         ret = p.wait()
         if ret == 0:
             os.remove("tmp.ps")
-        self.s.listen()
+        self.s.listen()  # required to re-focus onto turtle
+
+    def show_instrucions(self):
+        tk.messagebox.askokcancel(title = "Instructions", message = self.instructions)
 
     def pen_change(self):
         self.toggler
@@ -117,7 +138,7 @@ class TurtlePaint():
 
     def draw_color(self):
         self.s.tracer(False)
-        x = -370
+        x = -410
         pos = (x, 310)
         self.t2.penup()
         self.t3.penup()
@@ -152,7 +173,7 @@ class TurtlePaint():
 
     def change_color(self):
         if self.t3.pos()[0] >= -50:
-            x = -370
+            x = -410
         else:
             x = self.t3.pos()[0] + 40
 
@@ -195,6 +216,10 @@ class TurtlePaint():
         self.t4.penup()
         self.t4.goto(-420, 260)
         self.t4.pensize(3)
+        self.t4.pendown()
+        self.t4.fd(840)
+        self.t4.penup()
+        self.t4.goto(-420, -300)
         self.t4.pendown()
         self.t4.fd(840)
         self.s.tracer(True)
@@ -245,6 +270,15 @@ class TurtlePaint():
         self.draw_selector(self.t6, 2)
         self.s.tracer(True)
 
+    def refer_to_instructions(self):
+        self.s.tracer(False)
+        self.t7.penup()
+        self.t7.goto(-410, -315)
+        self.t7.pendown()
+        self.t7.write("press 'h' for instructions")
+        self.s.tracer(True)
+
+
     def move_up(self):
         self.t1.fd(10)
 
@@ -268,7 +302,7 @@ class TurtlePaint():
             self.t1.setheading(heading)
 
     def go_to(self, x, y):
-        if y < 258:
+        if y < 258 and y > -300:
             self.t1.goto(x, y)
 
     def undo_drawings(self):
