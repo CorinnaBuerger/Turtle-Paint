@@ -34,7 +34,7 @@ Calls `turtle.begin_fill()`. Needs to be pressed **before** drawing the shape th
 Calls `turtle.clear()`. Erases everything that the turtle has drawn so far.
 
 ### <kbd>e</kbd>
-Calls `turtle.end_fill()`. Needs to be pressed right after the shape is finished. You can still change the fillcolor right before pressing <kbd>e</kbd>.
+Calls `turtle.end_fill()`. Needs to be pressed right after the shape is finished. You can still change the fillcolor right before --- even after you called `turtle.begin_fill()`.
 
 ### <kbd>f</kbd>
 Calls `turtle.fillcolor()` with the next fillcolor in line. 
