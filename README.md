@@ -27,7 +27,7 @@ Keys                  |                    Command
 <kbd>DOWN</kbd>       |           decrease pensize        
 <kbd>?</kbd>          |          show instructions       
 
-### <kbd>b</kbd> and 
+### <kbd>b</kbd> 
 Calls `turtle.begin_fill()`. Needs to be pressed **before** drawing the shape that needs filling. Otherwise the filling will be uncomplete. 
 
 ### <kbd>c</kbd>
