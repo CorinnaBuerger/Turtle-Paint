@@ -1,8 +1,8 @@
 # Readme
 
 TurtlePaint is a drawing program made with the Python Turtle. 
-It allows you to draw in several colors by clicking on the screen, moving the turtle around with <kbd>h</kbd>, <kbd>j</kbd>, <kbd>k</kbd>, <kbd>l</kbd> or just by simply dragging it with your mouse.
-It is perfect for creating simple shapes, but also to free your creativity!
+It allows you to draw nice pictures by clicking on the screen, moving the turtle around with <kbd>h</kbd>, <kbd>j</kbd>, <kbd>k</kbd>, <kbd>l</kbd> or just by simply dragging it with your mouse. Choose between different pencolors, fillcolors, pensizes and turtle shapes to get a perfect result!
+It is great for creating simple shapes, but also to free your creativity!
 
 ## Instructions
 
