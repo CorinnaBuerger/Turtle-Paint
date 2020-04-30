@@ -27,6 +27,9 @@ Keys                  |                    Command
 <kbd>DOWN</kbd>       |           decrease pensize        
 <kbd>?</kbd>          |          show instructions       
 
+## Details
+The following section gives detailed information on all key combinations and explains the program usage in greater detail:
+
 ### <kbd>b</kbd> 
 Calls `turtle.begin_fill()`. Needs to be pressed **before** drawing the shape that needs filling. Otherwise the filling will be uncomplete. 
 
@@ -75,5 +78,5 @@ With `turtle.pensize()` it decreases the pensize with `-2`.
 ### <kbd>?</kbd>
 Shows all the instructions above in an additional window.
 
-
-
+## License and Contribution
+TODO
