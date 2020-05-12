@@ -8,11 +8,10 @@ from turtle import RawTurtle, Screen, Turtle, mainloop
 from libturtle import StringToggler, VolumeBar
 
 
-
 settings = {
     "start_volume_bar": (80, 280),
-    "start_penup": (0, 300),
-    "start_pendown": (0, 280),
+    "start_pendown": (0, 300),
+    "start_penup": (0, 280),
     "max_pensize": 21,
     "pensize_stepsize": 2,
     "title": "Turtle Paint v0.0.2",
@@ -21,14 +20,14 @@ settings = {
 
 class TurtlePaint():
     def __init__(self, settings):
-        self.t1 = Turtle() # main turtle
-        self.t2 = Turtle() # draws color bar
-        self.t3 = Turtle() # selects current color
-        self.t4 = Turtle() # draws tool bar border
-        self.t5 = Turtle() # makes shape stamps
-        self.t6 = Turtle() # selects current shape
-        self.t7 = Turtle() # refers to instructions
-        self.t8 = Turtle() # selects current fillcolor
+        self.t1 = Turtle()  # main turtle
+        self.t2 = Turtle()  # draws color bar
+        self.t3 = Turtle()  # selects current color
+        self.t4 = Turtle()  # draws tool bar border
+        self.t5 = Turtle()  # makes shape stamps
+        self.t6 = Turtle()  # selects current shape
+        self.t7 = Turtle()  # refers to instructions
+        self.t8 = Turtle()  # selects current fillcolor
         self.s = Screen()
         self.instructions = {
                                "b": "begin filling",
@@ -49,8 +48,8 @@ class TurtlePaint():
         }
         self.v = VolumeBar(settings.get("start_volume_bar"),
                            settings.get("max_pensize"), self.s)
-        self.toggler = StringToggler(settings.get("start_penup"),
-                                     settings.get("start_pendown"),
+        self.toggler = StringToggler(settings.get("start_pendown"),
+                                     settings.get("start_penup"),
                                      "pen down", "pen up", self.s)
         self.colors = ["green", "red", "yellow", "pink", "blue", "lightblue",
                        "orange", "purple", "black", "white"]
@@ -83,13 +82,14 @@ class TurtlePaint():
         self.draw_shapes()
         self.refer_to_instructions()
         self.v.fill_volume_bar(self.t1.pensize()/self.settings.get("max_pensize"))
-        self.set_pensize()
         self.register_callbacks()
 
     def register_callbacks(self):
         self.t1.onclick(self.t1.goto, 1)
         self.s.onkey(self.pen_change, "p")
         self.s.onkey(self.change_color, "space")
+        self.s.onkey(self.increase_pensize, "Up")
+        self.s.onkey(self.decrease_pensize, "Down")
         self.s.onscreenclick(self.go_to, 1)
         self.t1.ondrag(self.go_to, 1)
         self.s.onkey(self.screen_exit_handler, "Escape")
@@ -98,7 +98,7 @@ class TurtlePaint():
         self.s.onkey(self.clear_all, "c")
         self.s.onkey(self.change_shape, "t")
         self.s.onkeypress(self.move_down, "j")
-        self.s.onkey(self.show_instrucions, "?")
+        self.s.onkey(self.show_instructions, "?")
         self.s.onkeypress(self.move_up, "k")
         self.s.onkeypress(self.turn_left, "h")
         self.s.onkeypress(self.turn_right, "l")
@@ -129,7 +129,7 @@ class TurtlePaint():
             os.remove("tmp.ps")
         self.s.listen()  # required to re-focus onto turtle
 
-    def show_instrucions(self):
+    def show_instructions(self):
         win = Tk()
 
         row = 0
@@ -142,8 +142,6 @@ class TurtlePaint():
             column = 0
 
     def pen_change(self):
-        self.toggler
-
         if self.t1.isdown():
             self.t1.penup()
             self.toggler.toggle()
@@ -256,10 +254,6 @@ class TurtlePaint():
             self.v.fill_volume_bar(
                 self.t1.pensize()/self.settings.get("max_pensize"))
 
-    def set_pensize(self):
-        self.s.onkey(self.increase_pensize, "Up")
-        self.s.onkey(self.decrease_pensize, "Down")
-
     def draw_toolbar(self):
         self.s.tracer(False)
         self.t4.penup()
@@ -326,7 +320,6 @@ class TurtlePaint():
         self.t7.pendown()
         self.t7.write("press '?' for instructions")
         self.s.tracer(True)
-
 
     def move_up(self):
         self.t1.fd(10)

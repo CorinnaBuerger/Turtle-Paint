@@ -70,7 +70,6 @@ class StringToggler():
         self.write_turtle.penup()
         self.write_turtle.goto(self.active_str[1])
         self.write_turtle.pendown()
-
         self.write_turtle.color(self.active_color)
         self.write_turtle.write(self.active_str[0], font=self.font)
         self.write_turtle.penup()
